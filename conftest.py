@@ -46,6 +46,16 @@ def random_user():
         lastName=fake.last_name(),
     )
 
+@pytest.fixture(scope="function")
+def registered_user(session, registration_url, random_user):
+    user_data = {
+        "username": random_user.username,
+        "password": random_user.password,
+    }
+    response_reg = session.post(registration_url, json=user_data)
+    if response_reg.status_code == 200:
+        return random_user
+    return  UserDTO(TEST_EMAIL, TEST_PASSWORD)
 
 
 
